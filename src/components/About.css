@@ -1,0 +1,80 @@
+.about {
+  background: var(--paper);
+}
+
+.about-inner {
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: clamp(32px, 6vw, 96px);
+  align-items: start;
+}
+
+.about-title {
+  font-size: clamp(32px, 4.2vw, 54px);
+  font-weight: 800;
+  margin: 18px 0 22px;
+  letter-spacing: -0.03em;
+}
+.about-title em {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-weight: 400;
+  color: var(--sunset-deep);
+}
+.about-copy p {
+  font-size: 16.5px;
+  color: rgba(11, 15, 23, 0.72);
+  margin: 0 0 14px;
+  max-width: 56ch;
+}
+
+.about-sig {
+  margin-top: 28px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  color: var(--ink);
+}
+.about-sig span {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 18px;
+}
+
+.about-cards {
+  display: grid;
+  gap: 14px;
+}
+.about-card {
+  position: relative;
+  padding: 26px 28px;
+  background: #fff;
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+  transition: transform 260ms var(--ease), box-shadow 260ms;
+}
+.about-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 38px -22px rgba(11, 15, 23, 0.25);
+}
+.about-card-num {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 28px;
+  color: var(--sunset);
+  margin-bottom: 8px;
+}
+.about-card h3 {
+  font-size: 19px;
+  font-weight: 700;
+  margin: 0 0 6px;
+}
+.about-card p {
+  font-size: 14.5px;
+  color: rgba(11, 15, 23, 0.68);
+  margin: 0;
+}
+
+@media (max-width: 860px) {
+  .about-inner { grid-template-columns: 1fr; }
+}

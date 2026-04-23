@@ -1,0 +1,31 @@
+.marquee {
+  background: var(--ink);
+  color: var(--paper);
+  padding: 18px 0;
+  overflow: hidden;
+  border-top: 1px solid rgba(255,255,255,0.05);
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+.marquee-track {
+  display: flex;
+  gap: 56px;
+  white-space: nowrap;
+  width: max-content;
+  animation: scroll 38s linear infinite;
+}
+.marquee-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 20px;
+  letter-spacing: -0.01em;
+}
+.marquee-star {
+  color: var(--sunset);
+}
+@keyframes scroll {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}

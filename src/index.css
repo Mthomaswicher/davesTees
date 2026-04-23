@@ -1,0 +1,155 @@
+/* ========================================================================
+   Zakjahnai Tees — Design System
+   ---------------------------------------------------------------------- */
+
+:root {
+  /* Core palette */
+  --ink: #0b0f17;
+  --ink-soft: #1a1f2b;
+  --paper: #fbf8f3;
+  --paper-warm: #f2ece0;
+  --sand: #e8ddc9;
+  --rule: rgba(11, 15, 23, 0.12);
+
+  /* Accents — South Florida sunset */
+  --sunset: #ff5a3c;
+  --sunset-deep: #e03c1c;
+  --coral: #ffb199;
+  --teal: #0aa39a;
+  --sky: #f8c8b2;
+
+  /* Type */
+  --font-display: 'Archivo', system-ui, -apple-system, sans-serif;
+  --font-serif: 'Instrument Serif', Georgia, serif;
+  --font-body: 'Archivo', system-ui, -apple-system, sans-serif;
+
+  /* Motion */
+  --ease: cubic-bezier(0.2, 0.8, 0.2, 1);
+
+  /* Layout */
+  --container: 1240px;
+  --gutter: clamp(20px, 4vw, 48px);
+  --radius: 18px;
+  --radius-sm: 10px;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html, body { margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--font-body);
+  background: var(--paper);
+  color: var(--ink);
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  overflow-x: hidden;
+}
+
+img, svg { display: block; max-width: 100%; }
+button { font: inherit; cursor: pointer; border: none; background: none; color: inherit; }
+input, textarea, select { font: inherit; color: inherit; }
+
+a { color: inherit; text-decoration: none; }
+
+h1, h2, h3, h4 { margin: 0; font-family: var(--font-display); letter-spacing: -0.02em; line-height: 1.05; }
+
+.container {
+  max-width: var(--container);
+  margin: 0 auto;
+  padding: 0 var(--gutter);
+}
+
+/* Section label — small caps eyebrow */
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--sunset-deep);
+}
+.eyebrow::before {
+  content: '';
+  width: 22px;
+  height: 2px;
+  background: currentColor;
+}
+
+/* Buttons */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 26px;
+  border-radius: 999px;
+  font-weight: 600;
+  font-size: 15px;
+  letter-spacing: 0.01em;
+  transition: transform 240ms var(--ease), background 200ms, box-shadow 200ms, color 200ms;
+  white-space: nowrap;
+}
+.btn:hover { transform: translateY(-2px); }
+.btn:active { transform: translateY(0); }
+
+.btn-primary {
+  background: var(--ink);
+  color: var(--paper);
+  box-shadow: 0 10px 28px -14px rgba(11, 15, 23, 0.6);
+}
+.btn-primary:hover { background: var(--sunset); color: var(--paper); box-shadow: 0 14px 32px -12px rgba(255, 90, 60, 0.55); }
+
+.btn-accent {
+  background: var(--sunset);
+  color: var(--paper);
+  box-shadow: 0 10px 28px -12px rgba(255, 90, 60, 0.6);
+}
+.btn-accent:hover { background: var(--sunset-deep); }
+
+.btn-ghost {
+  background: transparent;
+  color: var(--ink);
+  border: 1.5px solid var(--ink);
+}
+.btn-ghost:hover { background: var(--ink); color: var(--paper); }
+
+.btn-arrow { transition: transform 240ms var(--ease); }
+.btn:hover .btn-arrow { transform: translateX(4px); }
+
+/* Section spacing */
+section { padding: clamp(72px, 10vw, 140px) 0; position: relative; }
+
+/* Reveal on scroll */
+.reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 800ms var(--ease), transform 800ms var(--ease);
+}
+.reveal.in {
+  opacity: 1;
+  transform: none;
+}
+
+/* Fixed scroll-progress line at the top of the viewport */
+.scroll-progress {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(to right, var(--sunset), var(--coral) 60%, var(--teal));
+  z-index: 100;
+  transform: scaleX(0);
+  transform-origin: 0 50%;
+  transition: transform 80ms linear;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; }
+  .reveal { opacity: 1; transform: none; }
+}
