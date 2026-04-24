@@ -1,6 +1,7 @@
 import { useRef, useState } from 'react'
 import './Designer.css'
 import TeeSvg from './TeeSvg.jsx'
+import TryOnOverlay from './TryOnOverlay.jsx'
 import { removeBackground } from '../lib/removeBackground.js'
 
 const COLORS = [
@@ -36,7 +37,8 @@ export default function Designer() {
   const [bgBusy, setBgBusy] = useState(false)
   const [bgError, setBgError] = useState('')
   const [bgTolerance, setBgTolerance] = useState(1)
-  const [onModel, setOnModel] = useState(false)
+  const [viewMode, setViewMode] = useState('flat') // 'flat' | 'model' | 'me'
+  const [selfieSrc, setSelfieSrc] = useState(null)
   const [dragging, setDragging] = useState(false)
   const inputRef = useRef(null)
 
@@ -104,6 +106,12 @@ export default function Designer() {
     setBgTolerance(1)
   }
 
+  const handleSelfieUpload = (file) => {
+    const reader = new FileReader()
+    reader.onload = (e) => setSelfieSrc(e.target.result)
+    reader.readAsDataURL(file)
+  }
+
   const matchedPreset = COLORS.find((c) => c.value.toLowerCase() === color.toLowerCase())
   const swatchLabel = matchedPreset ? matchedPreset.name : `Custom ${color.toUpperCase()}`
   const isCustom = !matchedPreset
@@ -125,16 +133,22 @@ export default function Designer() {
             <div className="preview-toolbar">
               <div className="toggle">
                 <button
-                  className={!onModel ? 'on' : ''}
-                  onClick={() => setOnModel(false)}
+                  className={viewMode === 'flat' ? 'on' : ''}
+                  onClick={() => setViewMode('flat')}
                 >
                   Flat
                 </button>
                 <button
-                  className={onModel ? 'on' : ''}
-                  onClick={() => setOnModel(true)}
+                  className={viewMode === 'model' ? 'on' : ''}
+                  onClick={() => setViewMode('model')}
                 >
                   On a model
+                </button>
+                <button
+                  className={viewMode === 'me' ? 'on' : ''}
+                  onClick={() => setViewMode('me')}
+                >
+                  On me
                 </button>
               </div>
               <span className="preview-chip">
@@ -143,41 +157,50 @@ export default function Designer() {
               </span>
             </div>
 
-            <div
-              className="preview-stage"
-              onPointerMove={(e) => {
-                const stage = e.currentTarget
-                const rect = stage.getBoundingClientRect()
-                const x = (e.clientX - rect.left) / rect.width - 0.5
-                const y = (e.clientY - rect.top) / rect.height - 0.5
-                stage.style.setProperty('--rx', `${y * -6}deg`)
-                stage.style.setProperty('--ry', `${x * 8}deg`)
-              }}
-              onPointerLeave={(e) => {
-                e.currentTarget.style.setProperty('--rx', '0deg')
-                e.currentTarget.style.setProperty('--ry', '0deg')
-              }}
-            >
-              <div className="preview-tilt" key={color}>
-                <TeeSvg
-                  color={color}
-                  imageSrc={imageSrc}
-                  imageScale={imageScale}
-                  showOnModel={onModel}
-                  className="preview-tee"
-                />
-              </div>
-              {!imageSrc && (
-                <div className="preview-hint">
-                  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M21 15V19a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-                    <polyline points="17 8 12 3 7 8" />
-                    <line x1="12" y1="3" x2="12" y2="15" />
-                  </svg>
-                  <p>Upload a design and you'll see it here, centered on the chest.</p>
+            {viewMode !== 'me' ? (
+              <div
+                className="preview-stage"
+                onPointerMove={(e) => {
+                  const stage = e.currentTarget
+                  const rect = stage.getBoundingClientRect()
+                  const x = (e.clientX - rect.left) / rect.width - 0.5
+                  const y = (e.clientY - rect.top) / rect.height - 0.5
+                  stage.style.setProperty('--rx', `${y * -6}deg`)
+                  stage.style.setProperty('--ry', `${x * 8}deg`)
+                }}
+                onPointerLeave={(e) => {
+                  e.currentTarget.style.setProperty('--rx', '0deg')
+                  e.currentTarget.style.setProperty('--ry', '0deg')
+                }}
+              >
+                <div className="preview-tilt" key={color}>
+                  <TeeSvg
+                    color={color}
+                    imageSrc={imageSrc}
+                    imageScale={imageScale}
+                    showOnModel={viewMode === 'model'}
+                    className="preview-tee"
+                  />
                 </div>
-              )}
-            </div>
+                {!imageSrc && (
+                  <div className="preview-hint">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M21 15V19a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                      <polyline points="17 8 12 3 7 8" />
+                      <line x1="12" y1="3" x2="12" y2="15" />
+                    </svg>
+                    <p>Upload a design and you'll see it here, centered on the chest.</p>
+                  </div>
+                )}
+              </div>
+            ) : (
+              <TryOnOverlay
+                selfieSrc={selfieSrc}
+                onSelfieUpload={handleSelfieUpload}
+                imageSrc={imageSrc}
+                imageScale={imageScale}
+              />
+            )}
 
             {imageSrc && (
               <div className="scale-row">

@@ -44,8 +44,9 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
   margin-bottom: 14px;
+  flex-wrap: wrap;
 }
 
 .toggle {

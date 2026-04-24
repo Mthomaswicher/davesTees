@@ -1,0 +1,143 @@
+.tryon-wrap {
+  width: 100%;
+  border-radius: 14px;
+  overflow: hidden;
+}
+
+.tryon-empty {
+  min-height: 340px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  background: var(--paper-warm);
+  border: 2px dashed rgba(11, 15, 23, 0.18);
+  border-radius: 14px;
+  cursor: pointer;
+  text-align: center;
+  padding: 40px 24px;
+  color: rgba(11, 15, 23, 0.7);
+  transition: background 180ms, border-color 180ms;
+}
+
+.tryon-empty:hover,
+.tryon-empty:focus-visible {
+  background: rgba(255, 90, 60, 0.05);
+  border-color: var(--sunset);
+  outline: none;
+}
+
+.tryon-empty svg {
+  color: var(--sunset-deep);
+}
+
+.tryon-empty p {
+  margin: 4px 0 0;
+  font-weight: 700;
+  font-size: 1rem;
+  color: var(--ink);
+}
+
+.tryon-empty span {
+  font-size: 0.8rem;
+  color: rgba(11, 15, 23, 0.5);
+}
+
+.tryon-stage {
+  position: relative;
+  width: 100%;
+  border-radius: 14px;
+  overflow: hidden;
+  background: #111;
+  line-height: 0;
+}
+
+.tryon-photo {
+  display: block;
+  width: 100%;
+  max-height: 520px;
+  object-fit: cover;
+  object-position: top center;
+}
+
+.tryon-design {
+  position: absolute;
+  top: 38%;
+  left: 50%;
+  object-fit: contain;
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-drag: none;
+  filter: drop-shadow(0 2px 14px rgba(0, 0, 0, 0.45));
+  transition: width 200ms ease;
+}
+
+.tryon-design:active {
+  cursor: grabbing;
+}
+
+.tryon-overlay-msg {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.45);
+}
+
+.tryon-overlay-msg p {
+  color: #fff;
+  font-size: 14px;
+  font-weight: 600;
+  text-align: center;
+  padding: 0 24px;
+  line-height: 1.5;
+}
+
+.tryon-drag-hint {
+  position: absolute;
+  bottom: 14px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(0, 0, 0, 0.65);
+  backdrop-filter: blur(8px);
+  color: #fff;
+  font-size: 12.5px;
+  font-weight: 600;
+  padding: 7px 14px;
+  border-radius: 99px;
+  white-space: nowrap;
+  animation: tryon-fade-up 0.4s ease both;
+  pointer-events: none;
+}
+
+@keyframes tryon-fade-up {
+  from { opacity: 0; transform: translateX(-50%) translateY(6px); }
+  to   { opacity: 1; transform: translateX(-50%) translateY(0); }
+}
+
+.tryon-change-btn {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(6px);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  padding: 6px 14px;
+  font-size: 12.5px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 160ms;
+  line-height: normal;
+}
+
+.tryon-change-btn:hover {
+  background: rgba(0, 0, 0, 0.82);
+}
