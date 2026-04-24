@@ -1,29 +1,38 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import './Contact.css'
+import { sendOrder, EMAILJS_PUBLIC_KEY } from '../lib/emailOrder.js'
+import emailjs from '@emailjs/browser'
 
 export default function Contact() {
-  const [sent, setSent] = useState(false)
+  const [status, setStatus] = useState('idle') // 'idle' | 'sending' | 'sent' | 'error'
+  const [design, setDesign] = useState(null)
   const [form, setForm] = useState({
     name: '', email: '', phone: '', type: 'custom', qty: '', details: ''
   })
 
+  useEffect(() => {
+    emailjs.init(EMAILJS_PUBLIC_KEY)
+    try {
+      const saved = localStorage.getItem('daves-order')
+      if (saved) setDesign(JSON.parse(saved))
+    } catch {
+      // ignore
+    }
+  }, [])
+
   const set = (k) => (e) => setForm({ ...form, [k]: e.target.value })
 
-  const onSubmit = (e) => {
+  const onSubmit = async (e) => {
     e.preventDefault()
-    // Build a prefilled mailto so this works without a backend
-    const body = [
-      `Name: ${form.name}`,
-      `Email: ${form.email}`,
-      `Phone: ${form.phone}`,
-      `Order type: ${form.type}`,
-      `Quantity: ${form.qty}`,
-      '',
-      'Details:',
-      form.details,
-    ].join('\n')
-    window.location.href = `mailto:hello@zakjahnaitees.com?subject=${encodeURIComponent('New order inquiry')}&body=${encodeURIComponent(body)}`
-    setSent(true)
+    setStatus('sending')
+    try {
+      await sendOrder({ form, design: design ?? {} })
+      setStatus('sent')
+      localStorage.removeItem('daves-order')
+    } catch (err) {
+      console.error('EmailJS error:', err)
+      setStatus('error')
+    }
   }
 
   return (
@@ -47,7 +56,7 @@ export default function Contact() {
             </li>
             <li>
               <span className="contact-meta-label">Email</span>
-              <a href="mailto:hello@zakjahnaitees.com">hello@zakjahnaitees.com</a>
+              <a href="mailto:dvvr2@aol.com">dvvr2@aol.com</a>
             </li>
             <li>
               <span className="contact-meta-label">Phone / Text</span>
@@ -61,9 +70,28 @@ export default function Contact() {
         </div>
 
         <form className="contact-form reveal" onSubmit={onSubmit}>
-          {sent && (
+          {status === 'sent' && (
             <div className="contact-sent">
-              ✓ Opening your email app — Dave will reply same day.
+              ✓ Order sent to Dave — he'll reply same day.
+            </div>
+          )}
+          {status === 'error' && (
+            <div className="contact-error">
+              Something went wrong. Please email Dave directly at{' '}
+              <a href="mailto:dvvr2@aol.com">dvvr2@aol.com</a>.
+            </div>
+          )}
+
+          {design && (
+            <div className="order-summary">
+              <div className="order-summary-label">Your order</div>
+              <div className="order-summary-row">
+                <span className="order-swatch" style={{ background: design.color }} />
+                <span>{design.size} · {design.qty} shirt{design.qty !== 1 ? 's' : ''} · <strong>${design.total}</strong></span>
+                {design.imageSrc && (
+                  <img src={design.imageSrc} className="order-thumb" alt="Your design" />
+                )}
+              </div>
             </div>
           )}
 
@@ -117,12 +145,20 @@ export default function Contact() {
               rows={5}
               value={form.details}
               onChange={set('details')}
-              placeholder="Tell Dave what you have in mind — sizes, colors, deadline, any design notes. Attach files after you send this."
+              placeholder="Tell Dave what you have in mind — sizes, colors, deadline, any design notes."
             />
           </label>
 
-          <button type="submit" className="btn btn-accent contact-submit">
-            Send inquiry <span className="btn-arrow">→</span>
+          <button
+            type="submit"
+            className="btn btn-accent contact-submit"
+            disabled={status === 'sending' || status === 'sent'}
+          >
+            {status === 'sending' ? (
+              <>Sending… <span className="btn-spinner" aria-hidden="true" /></>
+            ) : (
+              <>Send to Dave <span className="btn-arrow">→</span></>
+            )}
           </button>
           <p className="contact-fine">
             Dave reads every message. No bots, no upsells — just the guy who'll

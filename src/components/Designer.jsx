@@ -239,7 +239,18 @@ export default function Designer() {
                   ${tier.each}/shirt · {qty} shirt{qty > 1 ? 's' : ''} · {tier.min === 50 ? 'bulk' : `${tier.min}–${tier.max === 9999 ? '50+' : tier.max}`} pricing
                 </div>
               </div>
-              <a href="#contact" className="btn btn-accent">
+              <a
+                href="#contact"
+                className="btn btn-accent"
+                onClick={() => {
+                  localStorage.setItem('daves-order', JSON.stringify({
+                    color, size, qty,
+                    total,
+                    priceEach: tier.each,
+                    imageSrc,
+                  }))
+                }}
+              >
                 Send to Dave <span className="btn-arrow">→</span>
               </a>
             </div>
